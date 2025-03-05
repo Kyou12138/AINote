@@ -1,0 +1,2 @@
+# AINote
+AI Powered Notes
