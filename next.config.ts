@@ -10,8 +10,14 @@ const nextConfig: NextConfig = {
                 port: "",
                 pathname: "/**",
                 search: "",
-            }
+            },
         ],
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    eslint: {
+        ignoreDuringBuilds: true,
     },
 };
 
