@@ -1,6 +1,6 @@
 @import "tailwindcss";
-
 @plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -138,3 +138,8 @@
   background-color: #dadada;
   border-radius: 2px;
 }
+
+button {
+  cursor: pointer;
+}
+

@@ -1,13 +1,25 @@
+import CreateNoteDialog from "@/components/CreateNoteDialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { db } from "@/lib/db";
+import { $notes } from "@/lib/db/schema";
 import { UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { eq } from "drizzle-orm";
+import Image from "next/image";
 
 type Props = {};
 
-const DashboardPage = (props: Props) => {
+const DashboardPage = async (props: Props) => {
+    const { userId } = await auth();
+    const notes = await db
+        .select()
+        .from($notes)
+        .where(eq($notes.userId, userId!));
+
     return (
         <>
             <div className="grainy min-h-screen">
@@ -36,8 +48,38 @@ const DashboardPage = (props: Props) => {
                     <Separator />
                     <div className="h-8"></div>
                     {/* list all notes */}
-                    <div className="text-center">
-                        <h2 className="text-xl text-gray-500">备忘录为空</h2>
+                    {notes.length === 0 && (
+                        <div className="text-center">
+                            <h2 className="text-xl text-gray-500">
+                                笔记本为空，赶紧新建一个吧
+                            </h2>
+                        </div>
+                    )}
+
+                    <div className="grid sm:grid-cols-3 md:grid-cols-5 grid-cols-1 gap-3">
+                        <CreateNoteDialog />
+                        {notes.map((note) => (
+                            <a href={`/notebook/${note.id}`} key={note.id}>
+                                <div className="border border-stone-300 overflow-hidden flex flex-col hover:shadow-xl transition hover:-translate-y-1">
+                                    <Image
+                                        width={400}
+                                        height={200}
+                                        alt={note.name}
+                                        src={note.imgUrl || ""}
+                                    />
+                                    <div className="p-4"></div>
+                                    <h3 className="text-xl font-semibold text-gray-900">
+                                        {note.name}
+                                    </h3>
+                                    <div className="h-1"></div>
+                                    <p className="text-sm text-gray-500">
+                                        {new Date(
+                                            note.createdAt
+                                        ).toLocaleDateString()}
+                                    </p>
+                                </div>
+                            </a>
+                        ))}
                     </div>
                 </div>
             </div>

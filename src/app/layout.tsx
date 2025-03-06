@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 // fr-FR locale is imported as frFR
 import { zhCN } from "@clerk/localizations";
+import Provider from "@/components/Provider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -16,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "AI 备忘录",
-    description: "AI 备忘录",
+    title: "AI 笔记本",
+    description: "AI 笔记本",
 };
 
 export default function RootLayout({
@@ -28,11 +29,13 @@ export default function RootLayout({
     return (
         <ClerkProvider localization={zhCN}>
             <html lang="en">
-                <body
-                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-                >
-                    {children}
-                </body>
+                <Provider>
+                    <body
+                        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                    >
+                        {children}
+                    </body>
+                </Provider>
             </html>
         </ClerkProvider>
     );
